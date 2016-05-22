@@ -13,4 +13,3 @@ defmodule ArticleTrackerHd.Postgrex.Types.Ltree do
 
   def decode(%TypeInfo{type: "ltree"}, value, _state, _opts), do: value
 end
-
