@@ -4,7 +4,7 @@ defmodule ArticleTrackerHd.Article do
   schema "articles" do
     field :title, :string
     field :url, :string
-    field :categories, :string
+    field :categories, ArticleTrackerHd.Ecto.Types.Ltree  
 
     timestamps
   end

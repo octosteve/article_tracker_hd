@@ -9,6 +9,7 @@ defmodule ArticleTrackerHd.Repo.Migrations.CreateArticle do
 
       timestamps
     end
+    create index(:articles, [:categories], using: "GIST")
 
   end
 end
