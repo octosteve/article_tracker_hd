@@ -40,4 +40,7 @@ config :article_tracker_hd, ArticleTrackerHd.Repo,
   database: "article_tracker_hd_dev",
   hostname: "localhost",
   pool_size: 10,
-  extensions: [{ArticleTrackerHd.Postgrex.Types.Ltree, []}]
+  extensions: [
+    {ArticleTrackerHd.Postgrex.Types.Ltree, []},
+    {ArticleTrackerHd.Postgrex.Types.Lquery, []}
+  ]
