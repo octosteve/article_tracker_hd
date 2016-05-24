@@ -7,36 +7,28 @@ defmodule ArticleTrackerHd.ArticleController do
 
   def index(conn, _params) do
     articles = Repo.all(Article)
-    render(conn, "index.html", articles: articles)
-  end
-
-  def new(conn, _params) do
-    changeset = Article.changeset(%Article{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "index.json", articles: articles)
   end
 
   def create(conn, %{"article" => article_params}) do
     changeset = Article.changeset(%Article{}, article_params)
 
     case Repo.insert(changeset) do
-      {:ok, _article} ->
+      {:ok, article} ->
         conn
-        |> put_flash(:info, "Article created successfully.")
-        |> redirect(to: article_path(conn, :index))
+        |> put_status(:created)
+        |> put_resp_header("location", article_path(conn, :show, article))
+        |> render("show.json", article: article)
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(ArticleTrackerHd.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     article = Repo.get!(Article, id)
-    render(conn, "show.html", article: article)
-  end
-
-  def edit(conn, %{"id" => id}) do
-    article = Repo.get!(Article, id)
-    changeset = Article.changeset(article)
-    render(conn, "edit.html", article: article, changeset: changeset)
+    render(conn, "show.json", article: article)
   end
 
   def update(conn, %{"id" => id, "article" => article_params}) do
@@ -45,11 +37,11 @@ defmodule ArticleTrackerHd.ArticleController do
 
     case Repo.update(changeset) do
       {:ok, article} ->
-        conn
-        |> put_flash(:info, "Article updated successfully.")
-        |> redirect(to: article_path(conn, :show, article))
+        render(conn, "show.json", article: article)
       {:error, changeset} ->
-        render(conn, "edit.html", article: article, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(ArticleTrackerHd.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -60,8 +52,6 @@ defmodule ArticleTrackerHd.ArticleController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(article)
 
-    conn
-    |> put_flash(:info, "Article deleted successfully.")
-    |> redirect(to: article_path(conn, :index))
+    send_resp(conn, :no_content, "")
   end
 end
