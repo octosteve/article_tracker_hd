@@ -27,3 +27,9 @@ import_config "#{Mix.env}.exs"
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+config :guardian, Guardian,
+  issuer: "ArticleTrackerHd",
+  ttl: { 30, :days },
+  secret_key: "46l5yfRFGorxAArf64nGzHlfvSDAOUEV7m6c3/lf4LzZcBfUClDsSfNETrosmsdO",
+  serializer: ArticleTrackerHd.GuardianSerializer

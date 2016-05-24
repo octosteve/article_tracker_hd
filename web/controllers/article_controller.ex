@@ -3,6 +3,7 @@ defmodule ArticleTrackerHd.ArticleController do
 
   alias ArticleTrackerHd.Article
 
+  plug Guardian.Plug.EnsureAuthenticated, [handler: ArticleTrackerHd.GuardianErrorHandler]  when action in [:create, :update, :delete]
   plug :scrub_params, "article" when action in [:create, :update]
 
   def index(conn, _params) do
@@ -11,7 +12,9 @@ defmodule ArticleTrackerHd.ArticleController do
   end
 
   def create(conn, %{"article" => article_params}) do
-    changeset = Article.changeset(%Article{}, article_params)
+    account = Guardian.Plug.current_resource(conn)
+    article = Ecto.build_assoc(account, :articles)
+    changeset = Article.changeset(article, article_params)
 
     case Repo.insert(changeset) do
       {:ok, article} ->

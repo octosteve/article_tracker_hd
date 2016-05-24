@@ -5,6 +5,7 @@ defmodule ArticleTrackerHd.Article do
     field :title, :string
     field :url, :string
     field :categories, :string
+    belongs_to :account, ArticleTrackerHd.Account
 
     timestamps
   end

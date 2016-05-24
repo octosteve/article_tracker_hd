@@ -11,6 +11,8 @@ defmodule ArticleTrackerHd.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
   end
 
   scope "/", ArticleTrackerHd do
@@ -22,5 +24,6 @@ defmodule ArticleTrackerHd.Router do
   scope "/api", ArticleTrackerHd do
     pipe_through :api
     resources "/articles", ArticleController, except: [:new, :edit]
+    post "/log-in", SessionController, :create
   end
 end

@@ -14,7 +14,8 @@ defmodule ArticleTrackerHd.ArticleView do
       id: article.id,
       title: article.title,
       url: article.url,
-      categories: article.categories
+      categories: article.categories,
+      account_id: article.account_id
     }
   end
 end
